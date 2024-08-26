@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  problem: one
+  code: MyText
+  language: MyString
+  output: MyText
+  success: false
+
+two:
+  user: two
+  problem: two
+  code: MyText
+  language: MyString
+  output: MyText
+  success: false
