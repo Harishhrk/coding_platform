@@ -3,33 +3,30 @@ class SubmissionsController < ApplicationController
     before_action :authenticate_request, only: [:create, :index]
 
 
-  def create
-    problem = Problem.find(params[:problem_id])
-    code = params[:code]
-    language = params[:language] || 'python'  # Default to Python
-    Rails.logger.debug "Problem :#{problem}"
-
-    # Execute the code
-    service = CodeExecutionService.new(code, language)
-    result = service.execute
-
-    Rails.logger.debug "service :#{service}"
-    Rails.logger.debug "result :#{result}"
-    # Save the submission result
-    submission = current_user.submissions.create(
-      problem: problem,
-      code: code,
-      language: language,
-      output: result[:output],
-      success: result[:success]
-    )
-
-    if result[:success]
-      render json: { message: 'Code executed successfully', output: result[:output] }, status: :ok
-    else
-      render json: { message: 'Code execution failed', output: result[:output] }, status: :unprocessable_entity
+    def create
+      problem = Problem.find(params[:problem_id])
+      code = params[:code]
+      language = params[:language] || 'python'
+      
+      service = CodeExecutionService.new(code, language)
+      result = service.execute(problem)
+      
+      # Save the submission result
+      submission = current_user.submissions.create(
+        problem: problem,
+        code: code,
+        language: language,
+        output: result[:results].map { |r| "Input: #{r[:input]}, Output: #{r[:output]}, Expected: #{r[:expected_output]}" }.join("\n"),
+        success: result[:success]
+      )
+    
+      if result[:success]
+        render json: { message: 'Code executed successfully', results: result[:results] }, status: :ok
+      else
+        render json: { message: 'Code execution failed', results: result[:results] }, status: :unprocessable_entity
+      end
     end
-  end
+    
   
     def show
       @submission = Submission.find(params[:id])
