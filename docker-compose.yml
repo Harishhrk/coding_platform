@@ -1,0 +1,37 @@
+version: "3"
+services:
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Qwerty@123
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    volumes:
+      - ".:/app"
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - backend
+    environment:
+      DATABASE_URL: postgresql://postgres:Qwerty%40123@db:5432/coding_platform_development
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  pgdata:

@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   post 'register', to: 'authentication#register'
   post 'login', to: 'authentication#login'
   
+  resources :leaderboards, only: [:index]
   resources :users, only: [:show, :update, :destroy]
 
   resources :problems, only: [:index, :show, :create, :update, :destroy] do

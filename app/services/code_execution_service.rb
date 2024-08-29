@@ -40,7 +40,7 @@ class CodeExecutionService
         input: test_case.input,
         expected_output: test_case.expected_output,
         output: stdout.strip,
-        success: stdout.strip == test_case.expected_output
+        success: Regexp.new(test_case.expected_output.strip).match?(stdout.strip)
       }
       
       results << result

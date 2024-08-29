@@ -1,6 +1,8 @@
 class ProblemsController < ApplicationController
 
-    before_action :authenticate_request, only: [:create, :update, :destroy]
+  before_action :authenticate_request
+  before_action :authorize_admin, only: [:create, :update, :destroy]
+
     def index
       @problems = Problem.all
       render json: @problems
@@ -40,5 +42,11 @@ class ProblemsController < ApplicationController
     def problem_params
       params.require(:problem).permit(:title, :description, :difficulty)
     end
+
+    private
+
+  def authorize_admin
+    render json: { error: 'Access denied' }, status: :forbidden unless current_user.admin?
+  end
   end
   

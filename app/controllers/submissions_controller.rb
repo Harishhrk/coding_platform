@@ -8,16 +8,24 @@ class SubmissionsController < ApplicationController
       code = params[:code]
       language = params[:language] || 'python'
       
+      start_time = Time.now
       service = CodeExecutionService.new(code, language)
       result = service.execute(problem)
+      end_time = Time.now
       
+      time_taken = end_time - start_time
+
+
+      Rails.logger.debug "result #{result}"
+      Rails.logger.debug "time_taken #{time_taken}"
       # Save the submission result
       submission = current_user.submissions.create(
         problem: problem,
         code: code,
         language: language,
         output: result[:results].map { |r| "Input: #{r[:input]}, Output: #{r[:output]}, Expected: #{r[:expected_output]}" }.join("\n"),
-        success: result[:success]
+        success: result[:success],
+        time_taken: time_taken
       )
     
       if result[:success]

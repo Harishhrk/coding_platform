@@ -1,5 +1,7 @@
 class TestCasesController < ApplicationController
     before_action :set_problem
+    before_action :authenticate_request
+    before_action :authorize_admin, only: [:create, :update, :destroy]
   
     def index
       @test_cases = @problem.test_cases
@@ -33,5 +35,9 @@ class TestCasesController < ApplicationController
     def test_case_params
       params.require(:test_case).permit(:input, :expected_output)
     end
+
+    def authorize_admin
+        render json: { error: 'Access denied' }, status: :forbidden unless current_user.admin?
+      end
   end
   
