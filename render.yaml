@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: coding-platform
+    env: ruby
+    buildCommand: bundle install && bundle exec rake assets:precompile
+    startCommand: bundle exec puma -C config/puma.rb
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: coding-platform-db
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
+  - type: redis
+    name: coding-platform-redis
+    ipAllowList: []
+    plan: free
+    maxmemoryPolicy: noeviction
+databases:
+  - name: coding-platform-db
+    databaseName: coding_platform_production
+    user: coding_platform

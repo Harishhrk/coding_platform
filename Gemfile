@@ -1,5 +1,8 @@
 source "https://rubygems.org"
 
+gem 'active_interaction'
+
+
 gem 'open3'  # For running shell commands
 
 gem 'bcrypt', '~> 3.1.7'
@@ -38,6 +41,9 @@ gem "bootsnap", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
+
+# line for PostgreSQL support on Render
+gem 'pg', '~> 1.2', group: :production
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
