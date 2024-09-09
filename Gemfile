@@ -43,7 +43,7 @@ gem "bootsnap", require: false
 # gem "image_processing", "~> 1.2"
 
 # line for PostgreSQL support on Render
-gem 'pg', '~> 1.2', group: :production
+gem 'pg', '~> 1.5', group: :production
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
